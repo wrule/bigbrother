@@ -1,0 +1,9 @@
+{
+  "name": "bigbrother",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/wrule/bigbrother.git",
+  "author": "wrule",
+  "license": "MIT",
+  "private": false
+}
