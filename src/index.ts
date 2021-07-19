@@ -2,6 +2,7 @@ import http from 'http';
 import SocketIO from 'socket.io';
 import * as SocketIOClient from 'socket.io-client';
 import Jwt from 'jsonwebtoken';
+import { Token } from './token';
 
 export function NewWatcher(token: string, uri?: string) {
   const payload: any = Jwt.decode(token);
@@ -53,36 +54,30 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEYrgvD0Wpx4LtVq4zctcbznpd4+ce8KPQ
 -----END PUBLIC KEY-----
   `.trim();
 
-  const token1 = Jwt.sign({
+  const token1 = new Token({
     prj: 'XSea',
     ver: '*',
     name: 'jimao',
+    type: 'axios',
     addr: 'http://127.0.0.1:19841',
-  }, priKey, { algorithm: 'ES256' });
+  });
+
+  const sign = token1.Sign(priKey);
+
+  const data1 = Token.Verify(sign, pubKey);
+
+  console.log(data1);
   
 
-  const token2 = Jwt.sign({
-    prj: 'XSea',
-    ver: '*',
-    name: 'niubi',
-    addr: 'http://127.0.0.1:19841',
-  }, priKey, { algorithm: 'ES256' });
-  // const rst = JWT.decode(token);
-  // console.log(token);
-  // console.log(rst);
-  // const aa = JWT.decode(token);
-  // console.log(token);
-  // console.log(aa);
-
-  Start();
-  const watcher1 = NewWatcher(token1);
-  setInterval(() => {
-    watcher1('你好，世界');
-  }, 2000);
-  const watcher2 = NewWatcher(token2);
-  setInterval(() => {
-    watcher2('大胸妹');
-  }, 2000);
+  // Start();
+  // const watcher1 = NewWatcher(token1);
+  // setInterval(() => {
+  //   watcher1('你好，世界');
+  // }, 2000);
+  // const watcher2 = NewWatcher(token2);
+  // setInterval(() => {
+  //   watcher2('大胸妹');
+  // }, 2000);
 }
 
 main();
