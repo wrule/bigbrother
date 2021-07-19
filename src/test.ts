@@ -2,8 +2,6 @@
 import * as BigBrother from './index';
 import { Token } from './token';
 
-console.log('你好，世界');
-
 const priKey = `
 -----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIGtaBNn2rl7jHYO6GizijG8ASWd0pkutv6LA4RHjY97JoAcGBSuBBAAK
@@ -24,7 +22,7 @@ const token1 = new Token({
   ver: '*',
   name: 'jimao',
   type: 'axios',
-  addr: 'http://127.0.0.1:19841',
+  addr: 'http://172.16.1.194:19841',
 }).Sign(priKey);
 const watcher = BigBrother.NewWatcher(token1);
 setInterval(() => {
