@@ -16,19 +16,20 @@ import { Token, ITokenPayload } from './token';
   if (!srvAddr) {
     throw new Error('服务地址无效');
   }
-  let socket: SocketIOClient.Socket;
+  const socket = SocketIOClient.io(srvAddr, {
+    query: {
+      token,
+    },
+  });
   return (data: any) => {
-    if (!socket) {
-      socket = SocketIOClient.io(srvAddr, {
-        query: {
-          token,
-        },
-      });
+    try {
+      if (socket.disconnected) {
+        socket.connect();
+      }
+      socket.emit('watch', data);
+    } catch (e) {
+      console.error(e);
     }
-    if (socket.disconnected) {
-      socket.connect();
-    }
-    socket.emit('watch', data);
   };
 }
 

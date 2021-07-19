@@ -11,6 +11,20 @@ export abstract class Report {
     return desc;
   }
 
+  public get JsonObject() {
+    return {
+      id: this.id,
+      prjName: this.prjName,
+      prjVersion: this.prjVersion,
+      watcherName: this.watcherName,
+      watcherType: this.watcherType,
+      httpMethod: this.httpMethod,
+      httpPath: this.httpPath,
+      rspData: this.rspData,
+      reportTime: this.reportTime,
+    };
+  }
+
   abstract prjName: string;
   abstract prjVersion: string;
   abstract watcherName: string;

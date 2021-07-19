@@ -10,13 +10,10 @@ export class Collector {
     data: any,
   ) {
     const report = ReportFactory.Create(watcher, data);
+    console.log(report.httpMethod, report.httpPath);
     client.index({
-      index: 'myapi',
-      body: {
-        method: report.httpMethod,
-        path: report.httpPath,
-        rspData: report.rspData,
-      }
+      index: 'api',
+      body: report.JsonObject,
     });
   }
 }
