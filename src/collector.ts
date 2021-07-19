@@ -4,14 +4,19 @@ import ESClient from '@elastic/elasticsearch';
 
 const client = new ESClient.Client({ node: 'http://localhost:9200' });
 
-// client.pu
-
 export class Collector {
   public static Collect(
     watcher: ITokenPayload,
     data: any,
   ) {
     const report = ReportFactory.Create(watcher, data);
-    console.log(report.httpMethod, report.httpPath);
+    client.index({
+      index: 'myapi',
+      body: {
+        method: report.httpMethod,
+        path: report.httpPath,
+        rspData: report.rspData,
+      }
+    });
   }
 }
