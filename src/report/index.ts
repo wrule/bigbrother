@@ -1,8 +1,11 @@
 
 export interface IReport {
-  PrjName: string;
-  PrjVersion: string;
-  HTTPMethod: string;
-  HTTPPath: string;
-  RspData: any;
+  prjName: string;
+  prjVersion: string;
+  watcherName: string;
+  watcherType: string;
+  httpMethod: string;
+  httpPath: string;
+  rspData: any;
+  reportTime: number;
 }

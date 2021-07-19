@@ -1,6 +1,7 @@
 import http from 'http';
 import SocketIO from 'socket.io';
 import * as SocketIOClient from 'socket.io-client';
+import { Collector } from './collector';
 import { Token, ITokenPayload } from './token';
 
 /**
@@ -70,7 +71,7 @@ export function Start(
     const watcher: ITokenPayload = client.data.watcher;
     console.log(`${watcher.name}: 建立连接`);
     client.on('watch', data => {
-      console.log(`${watcher.name}: ${data}`);
+      Collector.Collect(watcher, data);
     });
     client.on('disconnect', () => {
       console.log(`${watcher.name}: 断开连接`);
