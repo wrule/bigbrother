@@ -1,45 +1,9 @@
 import http from 'http';
 import SocketIO from 'socket.io';
 import * as SocketIOClient from 'socket.io-client';
-import Jwt from 'jsonwebtoken';
-import { Token } from './token';
+import { ITokenPayload, Token } from './token';
 
-export function NewWatcher(token: string, uri?: string) {
-  const payload: any = Jwt.decode(token);
-  const srvAddr = uri ? uri : payload?.addr;
-  if (!srvAddr) {
-    throw new Error('服务地址无效');
-  }
-  let socket: SocketIOClient.Socket;
-  return (data: any) => {
-    if (!socket) {
-      socket = SocketIOClient.io(srvAddr);
-    }
-    if (socket.disconnected) {
-      socket.connect();
-    }
-    socket.emit('watch', { token, data });
-  };
-}
-
-export function Start(port: number = 19841) {
-  const server = http.createServer();
-  const io = new SocketIO.Server(server);
-  io.on('connection', client => {
-    console.log(`${client.id}: 建立连接`);
-    client.on('watch', data => {
-      console.log(`${client.id}: ${data.data}`);
-    });
-    client.on('disconnect', () => {
-      console.log(`${client.id}: 断开连接`);
-    });
-  });
-  server.listen(port);
-  console.log(`老大哥在${port}端口接受情报...`);
-}
-
-function main() {
-  const priKey = `
+const priKey = `
 -----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIKsUhsj7i/ORdPjhsJDvBoZxjqtFd+Je/pUXegbhfBW6oAcGBSuBBAAK
 oUQDQgAEYrgvD0Wpx4LtVq4zctcbznpd4+ce8KPQ99EzgAOJPRtuJeZELEEhjPL+
@@ -54,30 +18,102 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEYrgvD0Wpx4LtVq4zctcbznpd4+ce8KPQ
 -----END PUBLIC KEY-----
   `.trim();
 
+/**
+ * 创建新的盖世太保
+ * @param token 老大哥分发的令牌
+ * @param uri 如传入则覆盖令牌中的服务地址
+ * @returns 一个新的盖世太保
+ */
+export function NewWatcher(token: string, uri?: string) {
+  const payload = Token.Decode(token);
+  const srvAddr = uri ? uri : payload?.addr;
+  if (!srvAddr) {
+    throw new Error('服务地址无效');
+  }
+  let socket: SocketIOClient.Socket;
+  return (data: any) => {
+    if (!socket) {
+      socket = SocketIOClient.io(srvAddr, {
+        query: {
+          token,
+        },
+      });
+    }
+    if (socket.disconnected) {
+      socket.connect();
+    }
+    socket.emit('watch', data);
+  };
+}
+
+/**
+ * 启动老大哥服务
+ * 非对称加密采用椭圆曲线加密中的secp256k1算法，安全性很好，和比特币一致
+ * 具体参考：https://8gwifi.org/ecsignverify.jsp
+ * @param pubKey 公钥证书
+ * @param port 服务端口（默认19841）
+ */
+export function Start(
+  pubKey: string,
+  port: number = 19841,
+) {
+  const server = http.createServer();
+  const io = new SocketIO.Server(server);
+  // Jwt的权限验证
+  io.use((socket, next) => {
+    const query = socket.handshake.query || { };
+    if (query.token) {
+      const token = query.token as string;
+      const payload = Token.Verify(token, pubKey);
+      if (payload) {
+        socket.data.watcher = payload;
+        next();
+      } else {
+        next(new Error('Token不合法'));
+      }
+    } else {
+      next(new Error('没有传入Token'));
+    }
+  });
+  // SocketIO服务
+  io.on('connection', client => {
+    const watcher: ITokenPayload = client.data.watcher;
+    console.log(`${watcher.name}: 建立连接`);
+    client.on('watch', data => {
+      console.log(`${watcher.name}: ${data}`);
+    });
+    client.on('disconnect', () => {
+      console.log(`${watcher.name}: 断开连接`);
+    });
+  });
+  server.listen(port);
+  console.log(`老大哥在${port}端口接受情报...`);
+}
+
+function main() {
   const token1 = new Token({
     prj: 'XSea',
     ver: '*',
     name: 'jimao',
     type: 'axios',
     addr: 'http://127.0.0.1:19841',
-  });
-
-  const sign = token1.Sign(priKey);
-
-  const data1 = Token.Verify(sign, pubKey);
-
-  console.log(data1);
-  
-
-  // Start();
-  // const watcher1 = NewWatcher(token1);
-  // setInterval(() => {
-  //   watcher1('你好，世界');
-  // }, 2000);
-  // const watcher2 = NewWatcher(token2);
-  // setInterval(() => {
-  //   watcher2('大胸妹');
-  // }, 2000);
+  }).Sign(priKey);
+  const token2 = new Token({
+    prj: 'XOcean',
+    ver: '*',
+    name: 'null',
+    type: 'axios',
+    addr: 'http://127.0.0.1:19841',
+  }).Sign(priKey);
+  Start(pubKey);
+  const watcher1 = NewWatcher(token1);
+  const watcher2 = NewWatcher(token2);
+  setInterval(() => {
+    watcher1('你好，世界');
+  }, 2000);
+  setInterval(() => {
+    watcher2('你好，世界');
+  }, 2000);
 }
 
 main();
