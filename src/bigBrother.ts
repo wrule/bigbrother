@@ -42,8 +42,13 @@ export function Start(
   pubKey: string,
   port: number = 19841,
 ) {
+  // 创建服务，这里取消跨域限制了
   const server = http.createServer();
-  const io = new SocketIO.Server(server);
+  const io = new SocketIO.Server(server, {
+    cors: {
+      origin: '*',
+    },
+  });
   // Jwt的权限验证
   io.use((socket, next) => {
     const query = socket.handshake.query || { };
