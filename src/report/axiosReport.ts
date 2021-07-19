@@ -1,17 +1,15 @@
 import { AxiosResponse } from 'axios';
-import { IReport } from './index';
+import { Report } from './index';
 import URI from 'urijs';
 import { ITokenPayload } from '../token';
 
-export class AxiosReport implements IReport {
+export class AxiosReport extends Report {
   constructor(
     private watcher: ITokenPayload,
     private rsp: AxiosResponse<any>,
   ) {
-    this.reportTime = Number(new Date());
+    super();
   }
-
-  public readonly reportTime: number;
 
   public get prjName() {
     return this.watcher.prj;
