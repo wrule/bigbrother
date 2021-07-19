@@ -6,6 +6,7 @@ export interface ITokenPayload {
   name: string;
   type: string;
   addr: string;
+  [propName: string]: any;
 }
 
 export class Token {
@@ -26,7 +27,10 @@ export class Token {
     return result;
   }
 
-  public static Verify(token: string, pubKey: string): ITokenPayload | null {
+  public static Verify(
+    token: string,
+    pubKey: string,
+  ): ITokenPayload | null {
     let result: ITokenPayload | null = null;
     try {
       result = Jwt.verify(token, pubKey) as ITokenPayload | null;
