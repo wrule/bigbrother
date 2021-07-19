@@ -1,20 +1,10 @@
 
 import * as BigBrother from './index';
 import { Token } from './token';
+import fs from 'fs';
 
-const priKey = `
------BEGIN EC PRIVATE KEY-----
-MHQCAQEEIGtaBNn2rl7jHYO6GizijG8ASWd0pkutv6LA4RHjY97JoAcGBSuBBAAK
-oUQDQgAEMRZbsrnXprqJ8eeoat2Zedvej4EXufJVagH1fVkJeeKgw0DW6qQex7cK
-JtMJCsOmOK2xnbkEdLg2NopR1JdUmg==
------END EC PRIVATE KEY-----
-`;
-const pubKey = `
------BEGIN PUBLIC KEY-----
-MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEMRZbsrnXprqJ8eeoat2Zedvej4EXufJV
-agH1fVkJeeKgw0DW6qQex7cKJtMJCsOmOK2xnbkEdLg2NopR1JdUmg==
------END PUBLIC KEY-----
-`;
+const priKey = fs.readFileSync('./keys/pri.key', 'utf8');
+const pubKey = fs.readFileSync('./keys/pub.key', 'utf8');
 
 BigBrother.Start(pubKey);
 const token1 = new Token({
@@ -24,6 +14,7 @@ const token1 = new Token({
   type: 'axios',
   addr: 'http://172.16.1.194:19841',
 }).Sign(priKey);
+console.log(token1);
 const watcher = BigBrother.NewWatcher(token1);
 setInterval(() => {
   watcher('你好，世界');
