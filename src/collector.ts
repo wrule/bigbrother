@@ -1,9 +1,5 @@
 import { ReportFactory } from './report/reportFactory';
 import { ITokenPayload } from './token';
-import ESClient from '@elastic/elasticsearch';
-
-const client = new ESClient.Client({ node: 'http://localhost:9200' });
-
 export class Collector {
   public static Collect(
     watcher: ITokenPayload,
