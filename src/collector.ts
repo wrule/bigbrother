@@ -11,9 +11,9 @@ export class Collector {
   ) {
     const report = ReportFactory.Create(watcher, data);
     console.log(report.httpMethod, report.httpPath);
-    client.index({
-      index: 'api',
-      body: report.JsonObject,
-    });
+    // client.index({
+    //   index: 'api',
+    //   body: report.JsonObject,
+    // });
   }
 }
