@@ -104,5 +104,6 @@ dist
 .tern-port
 
 keys/
+jsons/
 
 yarn.lock
