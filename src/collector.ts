@@ -6,6 +6,7 @@ export class Collector {
     data: any,
   ) {
     const report = ReportFactory.Create(watcher, data);
+    console.log(report.id);
     console.log(report.httpMethod, report.httpPath);
     // client.index({
     //   index: 'api',

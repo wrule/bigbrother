@@ -1,12 +1,12 @@
-import { AxiosResponse } from 'axios';
-import { Report } from './index';
 import URI from 'urijs';
+import { AxiosResponse } from 'axios';
+import { Report } from './report';
 import { ITokenPayload } from '../token';
 
 export class AxiosReport extends Report {
   constructor(
     private watcher: ITokenPayload,
-    private rsp: AxiosResponse<any>,
+    private axiosRsp: AxiosResponse<any>,
   ) {
     super();
   }
@@ -28,14 +28,14 @@ export class AxiosReport extends Report {
   }
 
   public get httpMethod() {
-    return this.rsp.config.method || '';
+    return this.axiosRsp.config.method || '';
   }
 
   public get httpPath() {
-    return URI.parse(this.rsp.config.url || '').path || '';
+    return URI.parse(this.axiosRsp.config.url || '').path || '';
   }
 
-  public get rspData() {
-    return this.rsp.data;
+  public get httpRspData() {
+    return this.axiosRsp.data;
   }
 }

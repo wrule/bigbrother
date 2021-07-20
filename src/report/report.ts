@@ -1,3 +1,4 @@
+import { StringHash } from '../utils';
 
 export abstract class Report {
   constructor() {
@@ -8,8 +9,16 @@ export abstract class Report {
 
   public get id() {
     const desc = `${this.prjName}-${this.watcherType}-${this.httpMethod}-${this.httpPath}`;
-    return desc;
+    return StringHash(desc);
   }
+
+  abstract prjName: string;
+  abstract prjVersion: string;
+  abstract watcherName: string;
+  abstract watcherType: string;
+  abstract httpMethod: string;
+  abstract httpPath: string;
+  abstract httpRspData: any;
 
   public get JsonObject() {
     return {
@@ -20,16 +29,8 @@ export abstract class Report {
       watcherType: this.watcherType,
       httpMethod: this.httpMethod,
       httpPath: this.httpPath,
-      rspData: this.rspData,
+      httpRspData: this.httpRspData,
       reportTime: this.reportTime,
     };
   }
-
-  abstract prjName: string;
-  abstract prjVersion: string;
-  abstract watcherName: string;
-  abstract watcherType: string;
-  abstract httpMethod: string;
-  abstract httpPath: string;
-  abstract rspData: any;
 }

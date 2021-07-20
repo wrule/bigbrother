@@ -1,4 +1,4 @@
-import { Report } from '.';
+import { Report } from './report';
 import { ITokenPayload } from '../token';
 import { AxiosReport } from './axiosReport';
 
