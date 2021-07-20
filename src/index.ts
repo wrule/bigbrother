@@ -1,2 +1,2 @@
 export { ITokenPayload, Token } from './token';
-export { NewWatcher, Start } from './bigBrother';
+export { BigBrother } from './bigBrother';
