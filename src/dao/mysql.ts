@@ -23,6 +23,8 @@ export class MySQLDao implements IDao {
     }))[0][0];
     if (result) {
       result.id = result.hash;
+      result.httpRspData = JSON.parse(result.httpRspData);
+      result.httpRspModel = JSON.parse(result.httpRspModel);
       return result;
     }
     return null;
@@ -39,8 +41,8 @@ export class MySQLDao implements IDao {
         api.watcherType,
         api.httpMethod,
         api.httpPath,
-        api.httpRspData,
-        api.httpRspModel,
+        JSON.stringify(api.httpRspData),
+        JSON.stringify(api.httpRspModel),
         api.reportTime,
       ],
     });
