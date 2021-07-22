@@ -17,18 +17,21 @@ export class MySQLDao implements IDao {
   private sequelize: Sequelize;
 
   public async getLatestApi(hash: string) {
-    const result = await this.sequelize.query({
+    const result: any = (await this.sequelize.query({
       query: SQL_QueryLatestAPI,
       values: [hash],
-    });
-    return result[0][0];
+    }))[0][0];
+    if (result) {
+      result.id = result.hash;
+      return result;
+    }
+    return null;
   }
 
   public async pushApi(api: IAPI) {
     await this.sequelize.query({
       query: SQL_InsertAPI,
       values: [
-        '',
         api.id,
         api.prjName,
         api.prjVersion,

@@ -2,28 +2,24 @@ import { IAPI } from '../model/api';
 import fs from 'fs';
 import { JsFactory, ModelLoader } from '@wrule/mishu';
 import { Report } from '../report/report';
+import { MySQLDao } from '../dao/mysql';
+
+const mysql = new MySQLDao();
 
 export function getJsonPathById(id: string) {
   return `./jsons/${id}.json`;
 }
 
-export function queryAPIById(id: string) {
-  const jsonPath = getJsonPathById(id);
-  if (fs.existsSync(jsonPath)) {
-    const jsonStr = fs.readFileSync(jsonPath, 'utf8');
-    const api = JSON.parse(jsonStr) as IAPI;
-    return api;
-  }
-  return null;
+export async function queryAPIById(id: string): Promise<IAPI | null> {
+  return await mysql.getLatestApi(id);
 }
 
-export function updateAPI(api: IAPI) {
-  const jsonPath = getJsonPathById(api.id);
-  fs.writeFileSync(jsonPath, JSON.stringify(api, null, 2));
+export async function updateAPI(api: IAPI) {
+  return await mysql.pushApi(api);
 }
 
-export function scour(report: Report) {
-  const oldApi = queryAPIById(report.id);
+export async function scour(report: Report) {
+  const oldApi = await queryAPIById(report.id);
   if (oldApi) {
     const oldModel = ModelLoader.Load(oldApi.httpRspModel);
     const jsModel = JsFactory.Create('Rsp', report.httpRspData);
