@@ -1,14 +1,12 @@
 import { IAPI } from '../model/api';
-import fs from 'fs';
 import { JsFactory, ModelLoader } from '@wrule/mishu';
 import { Report } from '../report/report';
 import { MySQLDao } from '../dao/mysql';
+const jsonObject = require('../../config/mysql.json');
 
-const mysql = new MySQLDao();
+console.log(jsonObject);
 
-export function getJsonPathById(id: string) {
-  return `./jsons/${id}.json`;
-}
+const mysql = new MySQLDao(jsonObject);
 
 export async function queryAPIById(id: string): Promise<IAPI | null> {
   return await mysql.getLatestApi(id);

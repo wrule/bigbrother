@@ -1,17 +1,10 @@
 import { IDao } from './index';
-import { Sequelize } from 'sequelize';
+import { Options, Sequelize } from 'sequelize';
 import { IAPI } from '../model/api';
 
 export class MySQLDao implements IDao {
-  constructor() {
-    this.sequelize = new Sequelize({
-      dialect: 'mysql',
-      host: 'midware.dev.perfma-inc.com',
-      port: 3306,
-      username: 'app_tuba',
-      password: 'Perfma@1234',
-      database: 'perfma_tuba',
-    });
+  constructor(options: Options) {
+    this.sequelize = new Sequelize(options);
   }
 
   private sequelize: Sequelize;
@@ -47,6 +40,27 @@ export class MySQLDao implements IDao {
       ],
     });
   }
+
+  public async getAllProjectName() {
+    const result = await this.sequelize.query(SQL_GetAllProjectName);
+    return result;
+  }
+
+  public async getProjectApiList(projectName: string) {
+    const result = await this.sequelize.query({
+      query: SQL_GetProjectApiList,
+      values: [projectName],
+    });
+    return result;
+  }
+
+  public async getApiHistory(apiHash: string) {
+    const result = await this.sequelize.query({
+      query: SQL_GetApiHistory,
+      values: [apiHash],
+    });
+    return result;
+  }
 }
 
 const SQL_QueryLatestAPI = `
@@ -78,4 +92,33 @@ VALUES (
 	?,
 	?
 )
+`;
+
+const SQL_GetAllProjectName = `
+SELECT DISTINCT
+	prjName
+FROM
+	api
+`;
+
+const SQL_GetProjectApiList = `
+SELECT DISTINCT
+	\`hash\`,
+	prjName,
+	watcherType,
+	httpMethod,
+	httpPath
+FROM
+	api
+WHERE
+	prjName = ?;
+`;
+
+const SQL_GetApiHistory = `
+SELECT
+	*
+FROM
+	api
+WHERE
+	\`hash\` = ?
 `;
