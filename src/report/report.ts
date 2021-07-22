@@ -20,7 +20,7 @@ export abstract class Report {
   abstract httpPath: string;
   abstract httpRspData: any;
 
-  public get JsonObject() {
+  public get Model() {
     return {
       id: this.id,
       prjName: this.prjName,

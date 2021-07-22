@@ -1,6 +1,6 @@
 import { IAPI } from '../model/api';
 import fs from 'fs';
-import { JsFactory, JsonObjectLoader } from '@wrule/mishu';
+import { JsFactory, ModelLoader } from '@wrule/mishu';
 import { Report } from '../report/report';
 
 export function getJsonPathById(id: string) {
@@ -25,22 +25,22 @@ export function updateAPI(api: IAPI) {
 export function scour(report: Report) {
   const oldApi = queryAPIById(report.id);
   if (oldApi) {
-    const oldModel = JsonObjectLoader.Load(oldApi.httpRspModel);
+    const oldModel = ModelLoader.Load(oldApi.httpRspModel);
     const jsModel = JsFactory.Create('Rsp', report.httpRspData);
     const newModel = oldModel.Update(jsModel);
     if (!newModel.Equal(oldModel)) {
       console.log('发现接口变更: ', report.prjName, report.httpMethod, report.httpPath);
       updateAPI({
-        ...report.JsonObject,
-        httpRspModel: newModel.ToJsonObject(),
+        ...report.Model,
+        httpRspModel: newModel.ToModel(),
       });
     }
   } else {
     const newModel = JsFactory.Create('Rsp', report.httpRspData).ToTs();
     console.log('发现新接口: ', report.prjName, report.httpMethod, report.httpPath);
     updateAPI({
-      ...report.JsonObject,
-      httpRspModel: newModel.ToJsonObject(),
+      ...report.Model,
+      httpRspModel: newModel.ToModel(),
     });
   }
 }

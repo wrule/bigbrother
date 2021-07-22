@@ -1,4 +1,4 @@
-import { IJsonObject } from '@wrule/mishu';
+import { IModel } from '@wrule/mishu';
 
 export interface IAPI {
   id: string;
@@ -9,6 +9,6 @@ export interface IAPI {
   httpMethod: string,
   httpPath: string,
   httpRspData: any,
-  httpRspModel: IJsonObject,
+  httpRspModel: IModel,
   reportTime: Date,
 }
