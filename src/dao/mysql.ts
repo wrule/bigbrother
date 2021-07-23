@@ -9,6 +9,11 @@ export class MySQLDao implements IDao {
 
   private sequelize: Sequelize;
 
+  /**
+   * 查询最新的Api历史记录详情
+   * @param hash Api的hash
+   * @returns 记录详情
+   */
   public async getLatestApiHistory(hash: string) {
     const result: any = (await this.sequelize.query({
       query: SQL_GetLatestApiHistory,
@@ -23,6 +28,10 @@ export class MySQLDao implements IDao {
     return null;
   }
 
+  /**
+   * 插入Api历史记录
+   * @param api Api
+   */
   public async insertApiHistory(api: IAPI) {
     await this.sequelize.query({
       query: SQL_InsertApiHistory,
@@ -76,6 +85,19 @@ export class MySQLDao implements IDao {
       values: [apiHash],
     });
     return result[0] as any[];
+  }
+
+  /**
+   * 查询某个Api历史记录详情
+   * @param id 历史记录id
+   * @returns 历史记录详情
+   */
+  public async getApiHistoryDetail(id: number) {
+    const result: any = (await this.sequelize.query({
+      query: SQL_GetApiHistoryDetail,
+      values: [id],
+    }))[0][0];
+    return result || null;
   }
 }
 
