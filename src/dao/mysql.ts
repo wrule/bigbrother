@@ -74,7 +74,10 @@ export class MySQLDao implements IDao {
   }
 }
 
-const SQL_QueryLatestAPI = `
+/**
+ * 查询最新的Api历史记录详情SQL
+ */
+const SQL_QueryLatestApiHistory = `
 SELECT
 	*
 FROM
@@ -87,7 +90,10 @@ DESC
 LIMIT 1
 `;
 
-const SQL_InsertAPI = `
+/**
+ * 插入Api历史记录SQL
+ */
+const SQL_InsertApiHistory = `
 INSERT INTO
 	\`api\`
 VALUES (
@@ -105,6 +111,9 @@ VALUES (
 )
 `;
 
+/**
+ * 查询所有项目统计信息SQL
+ */
 const SQL_GetAllProjectInfo = `
 SELECT
 	b.*,
@@ -134,6 +143,9 @@ GROUP BY
 	b.apiNum
 `;
 
+/**
+ * 查询项目下Api列表SQL
+ */
 const SQL_GetProjectApiList = `
 SELECT DISTINCT
 	\`hash\`,
@@ -147,6 +159,9 @@ WHERE
 	prjName = ?;
 `;
 
+/**
+ * 获取某一个Api历史记录SQL
+ */
 const SQL_GetApiHistory = `
 SELECT
 	id,
@@ -167,6 +182,9 @@ ORDER BY
 DESC
 `;
 
+/**
+ * 查询某个Api历史记录详情SQL
+ */
 const SQL_GetApiHistoryDetail = `
 SELECT
 	*
