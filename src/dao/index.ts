@@ -1,13 +1,11 @@
-import { IAPI } from '../model/api';
-
 export interface IDao {
-  getLatestApiHistory(hash: string): any;
+  getLatestApiHistory(hash: string): Promise<unknown | null>;
 
-  insertApiHistory(api: any): any;
+  insertApiHistory(api: unknown): Promise<number | null>;
 
-  getAllProjectInfo(): Promise<any[]>;
+  getAllProjectInfo(): Promise<unknown[]>;
 
-  getProjectApiList(projectName: string): Promise<any[]>;
+  getProjectApiList(projectName: string): Promise<unknown[]>;
 
-  getApiHistory(apiHash: string): Promise<any[]>;
+  getApiHistory(apiHash: string): Promise<unknown[]>;
 }
