@@ -9,9 +9,9 @@ export class MySQLDao implements IDao {
 
   private sequelize: Sequelize;
 
-  public async getLatestApi(hash: string) {
+  public async getLatestApiHistory(hash: string) {
     const result: any = (await this.sequelize.query({
-      query: SQL_QueryLatestAPI,
+      query: SQL_GetLatestApiHistory,
       values: [hash],
     }))[0][0];
     if (result) {
@@ -23,9 +23,9 @@ export class MySQLDao implements IDao {
     return null;
   }
 
-  public async pushApi(api: IAPI) {
+  public async insertApiHistory(api: IAPI) {
     await this.sequelize.query({
-      query: SQL_InsertAPI,
+      query: SQL_InsertApiHistory,
       values: [
         api.id,
         api.prjName,
@@ -65,19 +65,24 @@ export class MySQLDao implements IDao {
     return result[0] as any[];
   }
 
+  /**
+   * 获取某一个Api历史记录
+   * @param apiHash api的hash
+   * @returns 历史记录
+   */
   public async getApiHistory(apiHash: string) {
     const result = await this.sequelize.query({
       query: SQL_GetApiHistory,
       values: [apiHash],
     });
-    return result;
+    return result[0] as any[];
   }
 }
 
 /**
  * 查询最新的Api历史记录详情SQL
  */
-const SQL_QueryLatestApiHistory = `
+const SQL_GetLatestApiHistory = `
 SELECT
 	*
 FROM
