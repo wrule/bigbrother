@@ -41,17 +41,28 @@ export class MySQLDao implements IDao {
     });
   }
 
-  public async getAllProjectName() {
-    const result = await this.sequelize.query(SQL_GetAllProjectName);
-    return result;
+  /**
+   * 获取所有项目的统计信息列表
+   * @returns 统计信息列表
+   */
+  public async getAllProjectInfo() {
+    const result = await this.sequelize.query(
+      SQL_GetAllProjectInfo
+    );
+    return result[0] as any[];
   }
 
+  /**
+   * 获取项目下所有的Api列表
+   * @param projectName 项目名称
+   * @returns Api列表
+   */
   public async getProjectApiList(projectName: string) {
     const result = await this.sequelize.query({
       query: SQL_GetProjectApiList,
       values: [projectName],
     });
-    return result;
+    return result[0] as any[];
   }
 
   public async getApiHistory(apiHash: string) {
@@ -94,11 +105,33 @@ VALUES (
 )
 `;
 
-const SQL_GetAllProjectName = `
-SELECT DISTINCT
-	prjName
+const SQL_GetAllProjectInfo = `
+SELECT
+	b.*,
+	COUNT(1) 'apiHistoryNum'
 FROM
-	api
+	(
+		SELECT
+			a.prjName,
+			COUNT(1) 'apiNum'
+		FROM
+			(
+				SELECT DISTINCT
+					prjName,
+					\`hash\`
+				FROM
+					api
+			) a
+		GROUP BY
+			prjName
+	) b
+LEFT JOIN
+	api c
+ON
+	b.prjName = c.prjName
+GROUP BY
+	b.prjName,
+	b.apiNum
 `;
 
 const SQL_GetProjectApiList = `
@@ -116,9 +149,29 @@ WHERE
 
 const SQL_GetApiHistory = `
 SELECT
-	*
+	id,
+	\`hash\`,
+	prjName,
+	prjVersion,
+	watcherName,
+	watcherType,
+	httpMethod,
+	httpPath,
+	reportTime
 FROM
 	api
 WHERE
 	\`hash\` = ?
+ORDER BY
+	reportTime
+DESC
+`;
+
+const SQL_GetApiHistoryDetail = `
+SELECT
+	*
+FROM
+	api
+WHERE
+	id = ?
 `;
