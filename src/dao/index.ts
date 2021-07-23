@@ -8,4 +8,6 @@ export interface IDao {
   getProjectApiList(projectName: string): Promise<unknown[]>;
 
   getApiHistory(apiHash: string): Promise<unknown[]>;
+
+  getApiHistoryDetail(id: number): Promise<unknown | null>;
 }

@@ -14,26 +14,20 @@ export class MySQLDao implements IDao {
    * @param hash Api的hash
    * @returns 记录详情
    */
-  public async getLatestApiHistory(hash: string) {
-    const result: any = (await this.sequelize.query({
+  public async getLatestApiHistory(hash: string): Promise<unknown | null> {
+    const result = (await this.sequelize.query({
       query: SQL_GetLatestApiHistory,
       values: [hash],
     }))[0][0];
-    if (result) {
-      result.id = result.hash;
-      result.httpRspData = JSON.parse(result.httpRspData);
-      result.httpRspModel = JSON.parse(result.httpRspModel);
-      return result;
-    }
-    return null;
+    return result || null;
   }
 
   /**
    * 插入Api历史记录
    * @param api Api
    */
-  public async insertApiHistory(api: IAPI) {
-    await this.sequelize.query({
+  public async insertApiHistory(api: any): Promise<number | null> {
+    const result = await this.sequelize.query({
       query: SQL_InsertApiHistory,
       values: [
         api.id,
@@ -43,22 +37,23 @@ export class MySQLDao implements IDao {
         api.watcherType,
         api.httpMethod,
         api.httpPath,
-        JSON.stringify(api.httpRspData),
-        JSON.stringify(api.httpRspModel),
+        api.httpRspData,
+        api.httpRspModel,
         api.reportTime,
       ],
     });
+    return 1 || null;
   }
 
   /**
    * 获取所有项目的统计信息列表
    * @returns 统计信息列表
    */
-  public async getAllProjectInfo() {
+  public async getAllProjectInfo(): Promise<unknown[]> {
     const result = await this.sequelize.query(
       SQL_GetAllProjectInfo
     );
-    return result[0] as any[];
+    return result[0];
   }
 
   /**
@@ -66,25 +61,25 @@ export class MySQLDao implements IDao {
    * @param projectName 项目名称
    * @returns Api列表
    */
-  public async getProjectApiList(projectName: string) {
+  public async getProjectApiList(projectName: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
       query: SQL_GetProjectApiList,
       values: [projectName],
     });
-    return result[0] as any[];
+    return result[0];
   }
 
   /**
    * 获取某一个Api历史记录
-   * @param apiHash api的hash
+   * @param hash api的hash
    * @returns 历史记录
    */
-  public async getApiHistory(apiHash: string) {
+  public async getApiHistory(hash: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
       query: SQL_GetApiHistory,
-      values: [apiHash],
+      values: [hash],
     });
-    return result[0] as any[];
+    return result[0];
   }
 
   /**
@@ -92,8 +87,8 @@ export class MySQLDao implements IDao {
    * @param id 历史记录id
    * @returns 历史记录详情
    */
-  public async getApiHistoryDetail(id: number) {
-    const result: any = (await this.sequelize.query({
+  public async getApiHistoryDetail(id: number): Promise<unknown | null> {
+    const result = (await this.sequelize.query({
       query: SQL_GetApiHistoryDetail,
       values: [id],
     }))[0][0];
