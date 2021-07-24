@@ -1,13 +1,13 @@
 export interface IDao {
-  getLatestApiHistory(hash: string): Promise<unknown | null>;
+  GetLatestApiHistory(hash: string): Promise<unknown | null>;
 
-  insertApiHistory(api: unknown): Promise<number | null>;
+  InsertApiHistory(api: unknown): Promise<number | null>;
 
-  getAllProjectInfo(): Promise<unknown[]>;
+  GetAllProjectInfo(): Promise<unknown[]>;
 
-  getProjectApiList(projectName: string): Promise<unknown[]>;
+  GetProjectApiList(projectName: string): Promise<unknown[]>;
 
-  getApiHistory(apiHash: string): Promise<unknown[]>;
+  GetApiHistory(apiHash: string): Promise<unknown[]>;
 
-  getApiHistoryDetail(id: number): Promise<unknown | null>;
+  GetApiHistoryDetail(id: number): Promise<unknown | null>;
 }

@@ -9,12 +9,16 @@ export class MySQLDao implements IDao {
 
   private sequelize: Sequelize;
 
+  public get Sequelize() {
+    return this.sequelize;
+  }
+
   /**
    * 查询最新的Api历史记录详情
    * @param hash Api的hash
    * @returns 记录详情
    */
-  public async getLatestApiHistory(hash: string): Promise<unknown | null> {
+  public async GetLatestApiHistory(hash: string): Promise<unknown | null> {
     const result = (await this.sequelize.query({
       query: SQL_GetLatestApiHistory,
       values: [hash],
@@ -26,7 +30,7 @@ export class MySQLDao implements IDao {
    * 插入Api历史记录
    * @param api Api
    */
-  public async insertApiHistory(api: any): Promise<number | null> {
+  public async InsertApiHistory(api: any): Promise<number | null> {
     const result = await this.sequelize.query({
       query: SQL_InsertApiHistory,
       values: [
@@ -49,7 +53,7 @@ export class MySQLDao implements IDao {
    * 获取所有项目的统计信息列表
    * @returns 统计信息列表
    */
-  public async getAllProjectInfo(): Promise<unknown[]> {
+  public async GetAllProjectInfo(): Promise<unknown[]> {
     const result = await this.sequelize.query(
       SQL_GetAllProjectInfo
     );
@@ -61,7 +65,7 @@ export class MySQLDao implements IDao {
    * @param projectName 项目名称
    * @returns Api列表
    */
-  public async getProjectApiList(projectName: string): Promise<unknown[]> {
+  public async GetProjectApiList(projectName: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
       query: SQL_GetProjectApiList,
       values: [projectName],
@@ -74,7 +78,7 @@ export class MySQLDao implements IDao {
    * @param hash api的hash
    * @returns 历史记录
    */
-  public async getApiHistory(hash: string): Promise<unknown[]> {
+  public async GetApiHistory(hash: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
       query: SQL_GetApiHistory,
       values: [hash],
@@ -87,7 +91,7 @@ export class MySQLDao implements IDao {
    * @param id 历史记录id
    * @returns 历史记录详情
    */
-  public async getApiHistoryDetail(id: number): Promise<unknown | null> {
+  public async GetApiHistoryDetail(id: number): Promise<unknown | null> {
     const result = (await this.sequelize.query({
       query: SQL_GetApiHistoryDetail,
       values: [id],
