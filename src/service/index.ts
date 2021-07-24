@@ -26,9 +26,9 @@ export class Service {
   }
 
   public async ScourApi(report: Report) {
-    const sequelize = (this.dao as MySQLDao).Sequelize;
-    const tx = await sequelize.transaction();
-    try {
+    // const sequelize = (this.dao as MySQLDao).Sequelize;
+    // const tx = await sequelize.transaction();
+    // try {
       const latestApi = await this.GetLatestApi(report.hash);
       if (latestApi) {
         const latestModel = ModelLoader.Load(latestApi.httpRspModel);
@@ -43,10 +43,10 @@ export class Service {
         console.log('发现新接口: ', report.prjName, report.httpMethod, report.httpPath);
         this.InsertApiHistory(report.ToApi());
       }
-    } catch (e) {
-      console.error(e);
-      await tx.rollback();
-    }
-    tx.commit();
+    // } catch (e) {
+    //   console.error(e);
+    //   await tx.rollback();
+    // }
+    // tx.commit();
   }
 }
