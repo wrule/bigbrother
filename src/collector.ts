@@ -1,8 +1,11 @@
 import { ReportFactory } from './report/reportFactory';
 import { ITokenPayload } from './token';
-import fs from 'fs';
-import * as Mishu from '@wrule/mishu';
-import { scour } from './service';
+import { MySQLDao } from './dao/mysql/mysql';
+import { Service } from './service';
+const mysqlConfig = require('../config/mysql.json');
+
+const dao = new MySQLDao(mysqlConfig);
+const service = new Service(dao);
 
 export class Collector {
   public static Collect(
@@ -11,6 +14,6 @@ export class Collector {
   ) {
     const report = ReportFactory.Create(watcher, data);
     console.log(`${report.watcherName}:`, report.prjName, report.httpMethod, report.httpPath);
-    ScourApi(report);
+    service.ScourApi(report);
   }
 }
