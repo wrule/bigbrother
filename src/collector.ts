@@ -11,6 +11,6 @@ export class Collector {
   ) {
     const report = ReportFactory.Create(watcher, data);
     console.log(`${report.watcherName}:`, report.prjName, report.httpMethod, report.httpPath);
-    scour(report);
+    ScourApi(report);
   }
 }

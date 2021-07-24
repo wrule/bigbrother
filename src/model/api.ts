@@ -1,7 +1,7 @@
 import { IModel } from '@wrule/mishu';
 
 export interface IAPI {
-  id: string;
+  hash: string;
   prjName: string,
   prjVersion: string,
   watcherName: string,
