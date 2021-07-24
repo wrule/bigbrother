@@ -1,6 +1,6 @@
-import { IDao } from '../index';
+import { IDao } from '../dao';
 import { Options, Sequelize } from 'sequelize';
-import { IAPI } from '../../model/api';
+import * as SQL from './sql';
 
 export class MySQLDao implements IDao {
   constructor(options: Options) {
@@ -20,7 +20,7 @@ export class MySQLDao implements IDao {
    */
   public async GetLatestApiHistory(hash: string): Promise<unknown | null> {
     const result = (await this.sequelize.query({
-      query: SQL_GetLatestApiHistory,
+      query: SQL.SQL_GetLatestApiHistory,
       values: [hash],
     }))[0][0];
     return result || null;
@@ -32,7 +32,7 @@ export class MySQLDao implements IDao {
    */
   public async InsertApiHistory(api: any): Promise<number | null> {
     const result = await this.sequelize.query({
-      query: SQL_InsertApiHistory,
+      query: SQL.SQL_InsertApiHistory,
       values: [
         api.id,
         api.prjName,
@@ -55,7 +55,7 @@ export class MySQLDao implements IDao {
    */
   public async GetAllProjectInfo(): Promise<unknown[]> {
     const result = await this.sequelize.query(
-      SQL_GetAllProjectInfo
+      SQL.SQL_GetAllProjectInfo
     );
     return result[0];
   }
@@ -67,7 +67,7 @@ export class MySQLDao implements IDao {
    */
   public async GetProjectApiList(projectName: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
-      query: SQL_GetProjectApiList,
+      query: SQL.SQL_GetProjectApiList,
       values: [projectName],
     });
     return result[0];
@@ -80,7 +80,7 @@ export class MySQLDao implements IDao {
    */
   public async GetApiHistory(hash: string): Promise<unknown[]> {
     const result = await this.sequelize.query({
-      query: SQL_GetApiHistory,
+      query: SQL.SQL_GetApiHistory,
       values: [hash],
     });
     return result[0];
@@ -93,10 +93,9 @@ export class MySQLDao implements IDao {
    */
   public async GetApiHistoryDetail(id: number): Promise<unknown | null> {
     const result = (await this.sequelize.query({
-      query: SQL_GetApiHistoryDetail,
+      query: SQL.SQL_GetApiHistoryDetail,
       values: [id],
     }))[0][0];
     return result || null;
   }
 }
-
