@@ -20,7 +20,7 @@ export class Service {
     const insertData: any = { ...api };
     insertData.httpRspData = JSON.stringify(insertData.httpRspData);
     insertData.httpRspModel = JSON.stringify(insertData.httpRspModel);
-    const result = await this.dao.InsertApiHistory(api);
+    const result = await this.dao.InsertApiHistory(insertData);
     return result;
   }
 
