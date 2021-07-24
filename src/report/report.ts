@@ -1,3 +1,5 @@
+import { TS } from '@wrule/mishu';
+import { IApi } from '../model/api';
 import { StringHash } from '../utils';
 
 export abstract class Report {
@@ -7,8 +9,8 @@ export abstract class Report {
 
   public readonly reportTime: Date;
 
-  public get id() {
-    const desc = `${this.prjName}-${this.watcherType}-${this.httpMethod}-${this.httpPath}`;
+  public get hash() {
+    const desc = `${this.prjName}-${this.httpMethod}-${this.httpPath}`;
     return StringHash(desc);
   }
 
@@ -20,9 +22,9 @@ export abstract class Report {
   abstract httpPath: string;
   abstract httpRspData: any;
 
-  public get Model() {
+  public ToApi(): IApi {
     return {
-      id: this.id,
+      hash: this.hash,
       prjName: this.prjName,
       prjVersion: this.prjVersion,
       watcherName: this.watcherName,
@@ -30,6 +32,7 @@ export abstract class Report {
       httpMethod: this.httpMethod,
       httpPath: this.httpPath,
       httpRspData: this.httpRspData,
+      httpRspModel: TS(this.httpRspData).ToModel(),
       reportTime: this.reportTime,
     };
   }

@@ -1,6 +1,6 @@
 import { IModel } from '@wrule/mishu';
 
-export interface IAPI {
+export interface IApi {
   hash: string;
   prjName: string,
   prjVersion: string,
